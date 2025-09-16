@@ -1,12 +1,15 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-   content: [
+  content: [
     "./index.html",              // for Vite
     "./src/**/*.{js,jsx,ts,tsx}" // all React components
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        primary: "#A020F0", // Added the missing #
+      },
+    },
   },
   plugins: [],
 }
-

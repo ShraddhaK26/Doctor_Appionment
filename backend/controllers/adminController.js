@@ -91,4 +91,16 @@ if(email === process.env.ADMIN_EMAIL &&  password === process.env.ADMIN_PASSWORD
    }
 }
 
-export {addDoctor , loginAdmin}
+// Api to get all doctors list for admin
+const allDoctors = async(req,res) => {
+   try {
+      const doctors = await doctorModel.find({}).select('-password')
+      res.json({success:true,doctors})
+   } catch (error) {
+      console.log(error);
+      res.json({success:false, message:error.message})
+      
+   }
+}
+
+export {addDoctor , loginAdmin , allDoctors}
