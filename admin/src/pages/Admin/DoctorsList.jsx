@@ -44,12 +44,13 @@
 // export default DoctorsList
 
 /* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable no-unused-vars */
+ 
+
 import React, { useContext, useEffect } from "react";
 import { AdminContext } from "../../context/AdminContext";
 
 const DoctorsList = () => {
-  const { doctors, aToken, getAllDoctors } = useContext(AdminContext);
+  const { doctors, aToken, getAllDoctors , changeAvailablity } = useContext(AdminContext);
 
   useEffect(() => {
     if (aToken) {
@@ -80,7 +81,7 @@ const DoctorsList = () => {
 
               {/* Availability */}
               <div className="mt-2 flex items-center gap-1 text-sm">
-                <input type="checkbox" checked={item.available} readOnly />
+                <input onChange={() =>changeAvailablity(item._id)} type="checkbox" checked={item.available} readOnly />
                 <p>Available</p>
               </div>
             </div>

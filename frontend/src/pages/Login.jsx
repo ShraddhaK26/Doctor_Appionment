@@ -1,16 +1,57 @@
-import React, { useState } from 'react';
+/* eslint-disable no-unused-vars */
+import React, { useContext, useState } from "react";
+import { AppContext } from "../context/AppContext";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
-  const [state, setState] = useState("Sign Up");
+  const { backendUrl, setToken } = useContext(AppContext);
+  const navigate = useNavigate();
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [name, setName] = useState('');
+  const [state, setState] = useState("Sign Up");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
 
   const onSubmitHandler = async (event) => {
     event.preventDefault();
-    console.log({ name, email, password, state });
-    // Here you can add API call for login/signup
+
+    try {
+      if (state === "Sign Up") {
+        // Register API
+        const { data } = await axios.post(`${backendUrl}/api/user/register`, {
+          name,
+          email,
+          password,
+        });
+        if (data.success) {
+          localStorage.setItem("token", data.token);
+          setToken(data.token);
+          toast.success("Account created successfully!");
+          navigate("/"); // redirect after signup
+        } else {
+          toast.error(data.message);
+        }
+      } else {
+        // Login API
+        const { data } = await axios.post(`${backendUrl}/api/user/login`, {
+          email,
+          password,
+        });
+        if (data.success) {
+          localStorage.setItem("token", data.token);
+          setToken(data.token);
+          toast.success("Login successful!");
+          navigate("/"); // redirect after login
+        } else {
+          toast.error(data.message);
+        }
+      }
+    } catch (error) {
+      console.error("Login/Register error:", error);
+      toast.error("Something went wrong");
+    }
   };
 
   return (
@@ -24,7 +65,8 @@ const Login = () => {
           {state === "Sign Up" ? "Create Account" : "Login"}
         </p>
         <p>
-          Please {state === "Sign Up" ? "sign up" : "login"} to book an appointment.
+          Please {state === "Sign Up" ? "sign up" : "login"} to book an
+          appointment.
         </p>
 
         {/* Full Name only when Sign Up */}
